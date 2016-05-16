@@ -21,6 +21,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import org.telegram.tgnet.TLObject;
@@ -126,6 +127,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
     }
 
     public void setImage(TLObject fileLocation, String httpUrl, String filter, Drawable thumb, TLRPC.FileLocation thumbLocation, String thumbFilter, int size, String ext, boolean cacheOnly) {
+        Log.d("bilibili","ImageReceiver setImage "+httpUrl);
         if (setImageBackup != null) {
             setImageBackup.fileLocation = null;
             setImageBackup.httpUrl = null;
@@ -846,6 +848,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
     }
 
     private void recycleBitmap(String newKey, boolean thumb) {
+        Log.d("bilibili","ImageReceiver recycleBitmap "+newKey);
         String key;
         BitmapDrawable image;
         if (thumb) {

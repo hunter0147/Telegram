@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
@@ -1362,6 +1363,7 @@ public class ImageLoader {
     }
 
     private void performReplace(String oldKey, String newKey) {
+        Log.d("bilibili","ImageLoader performReplace ");
         BitmapDrawable b = memCache.get(oldKey);
         if (b != null) {
             ignoreRemoval = oldKey;
@@ -1377,6 +1379,7 @@ public class ImageLoader {
     }
 
     public void incrementUseCount(String key) {
+        Log.d("bilibili","ImageLoader incrementUseCount "+key);
         Integer count = bitmapUseCounts.get(key);
         if (count == null) {
             bitmapUseCounts.put(key, 1);
@@ -1386,6 +1389,7 @@ public class ImageLoader {
     }
 
     public boolean decrementUseCount(String key) {
+        Log.d("bilibili","ImageLoader decrementUseCount "+key);
         Integer count = bitmapUseCounts.get(key);
         if (count == null) {
             return true;
@@ -1400,19 +1404,23 @@ public class ImageLoader {
     }
 
     public void removeImage(String key) {
+        Log.d("bilibili","ImageLoader removeImage "+key);
         bitmapUseCounts.remove(key);
         memCache.remove(key);
     }
 
     public boolean isInCache(String key) {
+        Log.d("bilibili","ImageLoader isInCache "+key);
         return memCache.get(key) != null;
     }
 
     public void clearMemory() {
+        Log.d("bilibili","ImageLoader clearMemory ");
         memCache.evictAll();
     }
 
     private void removeFromWaitingForThumb(Integer TAG) {
+        Log.d("bilibili","ImageLoader removeFromWaitingForThumb ");
         String location = waitingForQualityThumbByTag.get(TAG);
         if (location != null) {
             ThumbGenerateInfo info = waitingForQualityThumb.get(location);
@@ -1427,6 +1435,7 @@ public class ImageLoader {
     }
 
     public void cancelLoadingForImageReceiver(final ImageReceiver imageReceiver, final int type) {
+        Log.d("bilibili","ImageLoader cancelLoadingForImageReceiver ");
         if (imageReceiver == null) {
             return;
         }
@@ -1457,10 +1466,12 @@ public class ImageLoader {
     }
 
     public BitmapDrawable getImageFromMemory(String key) {
+        Log.d("bilibili","ImageLoader getImageFromMemory "+key);
         return memCache.get(key);
     }
 
     public BitmapDrawable getImageFromMemory(TLObject fileLocation, String httpUrl, String filter) {
+        Log.d("bilibili","ImageLoader getImageFromMemory "+httpUrl);
         if (fileLocation == null && httpUrl == null) {
             return null;
         }
@@ -1483,6 +1494,7 @@ public class ImageLoader {
     }
 
     public void replaceImageInCache(final String oldKey, final String newKey, final TLRPC.FileLocation newLocation) {
+        Log.d("bilibili","ImageLoader replaceImageInCache "+newKey);
         AndroidUtilities.runOnUIThread(new Runnable() {
             @Override
             public void run() {
@@ -1503,10 +1515,12 @@ public class ImageLoader {
     }
 
     public void putImageToCache(BitmapDrawable bitmap, String key) {
+        Log.d("bilibili","ImageLoader putImageToCache "+key);
         memCache.put(key, bitmap);
     }
 
     private void generateThumb(int mediaType, File originalPath, TLRPC.FileLocation thumbLocation, String filter) {
+        Log.d("bilibili","ImageLoader generateThumb "+originalPath.getAbsolutePath());
         if (mediaType != FileLoader.MEDIA_DIR_IMAGE && mediaType != FileLoader.MEDIA_DIR_VIDEO && mediaType != FileLoader.MEDIA_DIR_DOCUMENT || originalPath == null || thumbLocation == null) {
             return;
         }
@@ -1519,6 +1533,7 @@ public class ImageLoader {
     }
 
     private void createLoadOperationForImageReceiver(final ImageReceiver imageReceiver, final String key, final String url, final String ext, final TLObject imageLocation, final String httpLocation, final String filter, final int size, final boolean cacheOnly, final int thumb) {
+        Log.d("bilibili","ImageLoader createLoadOperationForImageReceiver ");
         if (imageReceiver == null || url == null || key == null) {
             return;
         }
@@ -1673,6 +1688,7 @@ public class ImageLoader {
     }
 
     public void loadImageForImageReceiver(ImageReceiver imageReceiver) {
+        Log.d("bilibili","ImageLoader loadImageForImageReceiver ");
         if (imageReceiver == null) {
             return;
         }
@@ -1776,6 +1792,7 @@ public class ImageLoader {
     }
 
     private void httpFileLoadError(final String location) {
+        Log.d("bilibili","ImageLoader httpFileLoadError "+location);
         imageLoadQueue.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -1792,6 +1809,7 @@ public class ImageLoader {
     }
 
     private void fileDidLoaded(final String location, final File finalFile, final int type) {
+        Log.d("bilibili","ImageLoader fileDidLoaded "+location);
         imageLoadQueue.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -1833,6 +1851,7 @@ public class ImageLoader {
     }
 
     private void fileDidFailedLoad(final String location, int canceled) {
+        Log.d("bilibili","ImageLoader fileDidFailedLoad "+location);
         if (canceled == 1) {
             return;
         }
@@ -1848,6 +1867,7 @@ public class ImageLoader {
     }
 
     private void runHttpTasks(boolean complete) {
+        Log.d("bilibili","ImageLoader runHttpTasks ");
         if (complete) {
             currentHttpTasksCount--;
         }
@@ -1863,6 +1883,7 @@ public class ImageLoader {
     }
 
     public void loadHttpFile(String url, String extension) {
+        Log.d("bilibili","ImageLoader loadHttpFile "+url);
         if (url == null || url.length() == 0 || httpFileLoadTasksByKeys.containsKey(url)) {
             return;
         }
@@ -1886,6 +1907,7 @@ public class ImageLoader {
     }
 
     public void cancelLoadHttpFile(String url) {
+        Log.d("bilibili","ImageLoader cancelLoadHttpFile "+url);
         HttpFileTask task = httpFileLoadTasksByKeys.get(url);
         if (task != null) {
             task.cancel(true);
@@ -1900,6 +1922,7 @@ public class ImageLoader {
     }
 
     private void runHttpFileLoadTasks(final HttpFileTask oldTask, final int reason) {
+        Log.d("bilibili","ImageLoader runHttpFileLoadTasks ");
         AndroidUtilities.runOnUIThread(new Runnable() {
             @Override
             public void run() {
@@ -1943,6 +1966,7 @@ public class ImageLoader {
     }
 
     public static Bitmap loadBitmap(String path, Uri uri, float maxWidth, float maxHeight, boolean useMaxScale) {
+        Log.d("bilibili","ImageLoader loadBitmap "+path);
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         FileDescriptor fileDescriptor = null;
@@ -2078,6 +2102,7 @@ public class ImageLoader {
     }
 
     public static void fillPhotoSizeWithBytes(TLRPC.PhotoSize photoSize) {
+        Log.d("bilibili","ImageLoader fillPhotoSizeWithBytes ");
         if (photoSize == null || photoSize.bytes != null) {
             return;
         }
@@ -2095,6 +2120,7 @@ public class ImageLoader {
     }
 
     private static TLRPC.PhotoSize scaleAndSaveImageInternal(Bitmap bitmap, int w, int h, float photoW, float photoH, float scaleFactor, int quality, boolean cache, boolean scaleAnyway) throws Exception {
+        Log.d("bilibili","ImageLoader scaleAndSaveImageInternal ");
         Bitmap scaledBitmap;
         if (scaleFactor > 1 || scaleAnyway) {
             scaledBitmap = Bitmaps.createScaledBitmap(bitmap, w, h, true);
@@ -2149,6 +2175,7 @@ public class ImageLoader {
     }
 
     public static TLRPC.PhotoSize scaleAndSaveImage(Bitmap bitmap, float maxWidth, float maxHeight, int quality, boolean cache, int minWidth, int minHeight) {
+        Log.d("bilibili","ImageLoader scaleAndSaveImage ");
         if (bitmap == null) {
             return null;
         }
@@ -2191,6 +2218,7 @@ public class ImageLoader {
     }
 
     public static String getHttpUrlExtension(String url) {
+        Log.d("bilibili","ImageLoader getHttpUrlExtension ");
         String ext = null;
         int idx = url.lastIndexOf(".");
         if (idx != -1) {
@@ -2203,6 +2231,7 @@ public class ImageLoader {
     }
 
     public static void saveMessageThumbs(TLRPC.Message message) {
+        Log.d("bilibili","ImageLoader saveMessageThumbs ");
         TLRPC.PhotoSize photoSize = null;
         if (message.media instanceof TLRPC.TL_messageMediaPhoto) {
             for (TLRPC.PhotoSize size : message.media.photo.sizes) {
@@ -2277,6 +2306,7 @@ public class ImageLoader {
     }
 
     public static void saveMessagesThumbs(ArrayList<TLRPC.Message> messages) {
+        Log.d("bilibili","ImageLoader saveMessageThumbs ");
         if (messages == null || messages.isEmpty()) {
             return;
         }
